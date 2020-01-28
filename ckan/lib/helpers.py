@@ -698,6 +698,7 @@ def are_there_flash_messages():
 
 def _link_active(kwargs):
     ''' creates classes for the link_to calls '''
+    log.debug('*** link_active')
     if is_flask_request():
         return _link_active_flask(kwargs)
     else:
@@ -720,6 +721,8 @@ def _link_active_flask(kwargs):
 def _link_to(text, *args, **kwargs):
     '''Common link making code for several helper functions'''
     assert len(args) < 2, 'Too many unnamed arguments'
+
+    log.debug('*** link_to')
 
     def _link_class(kwargs):
         ''' creates classes for the link_to calls '''
@@ -757,6 +760,7 @@ def nav_link(text, *args, **kwargs):
     :param condition: if ``False`` then no link is returned
 
     '''
+    log.debug('*** nav_link')
     if is_flask_request():
         return nav_link_flask(text, *args, **kwargs)
     else:
@@ -838,11 +842,18 @@ def build_nav_main(*args):
     args: tuples of (menu type, title) eg ('login', _('Login'))
     outputs <li><a href="...">title</a></li>
     '''
+    # log.debug('=====')
+    # log.debug('****** build_nav_main', args)
+    # import remote_pdb; remote_pdb.set_trace(host='0.0.0.0', port=3000)
+    # print('====')
     output = ''
+    # import remote_pdb; remote_pdb.set_trace(host='0.0.0.0', port=3000)
     for item in args:
         menu_item, title = item[:2]
         if len(item) == 3 and not check_access(item[2]):
+            log.debug('*** passing')
             continue
+        log.debug('*** passing')
         output += _make_menu_item(menu_item, title)
     return output
 
@@ -942,6 +953,7 @@ def _make_menu_item(menu_item, title, **kw):
 
     This function is called by wrapper functions.
     '''
+    log.debug('**** make_menu_item')
     menu_item = map_pylons_to_flask_route_name(menu_item)
     _menu_items = config['routes.named_routes']
     if menu_item not in _menu_items:
@@ -1644,12 +1656,14 @@ def tag_link(tag):
 
 @core_helper
 def group_link(group):
+    print('*** group link')
     url = url_for(controller='group', action='read', id=group['name'])
     return tags.link_to(group['title'], url)
 
 
 @core_helper
 def organization_link(organization):
+    print('*** org link')
     url = url_for(controller='organization', action='read',
                   id=organization['name'])
     return tags.link_to(organization['title'], url)

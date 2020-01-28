@@ -28,6 +28,7 @@ def before_request():
 
 def index():
     u'''display home page'''
+    import logging; log = logging.getLogger(__name__); log.info('*** home')
     try:
         context = {u'model': model, u'session': model.Session,
                    u'user': g.user, u'auth_user_obj': g.userobj}

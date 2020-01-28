@@ -149,6 +149,8 @@ def register_group_plugins(map):
             _default_organization_plugin is not None):
         return
 
+    log.error('**** register group')
+
     # Create the mappings and register the fallback behaviour if one is found.
     for plugin in plugins.PluginImplementations(plugins.IGroupForm):
 
@@ -159,17 +161,22 @@ def register_group_plugins(map):
         except AttributeError:
             group_controller = 'group'
 
+        log.error('*** plugin %r %r', plugin, group_controller)
+
         if plugin.is_fallback():
             if hasattr(plugin, 'is_organization'):
                 is_organization = plugin.is_organization
             else:
                 is_organization = group_controller == 'organization'
 
+            log.error('*** plugin is fallback %r', is_organization)
+
             if is_organization:
                 if _default_organization_plugin is not None:
                     raise ValueError("More than one fallback IGroupForm for "
                                      "organizations has been registered")
                 _default_organization_plugin = plugin
+                log.error('*** default org plugin')
 
             else:
                 if _default_group_plugin is not None:
@@ -244,8 +251,10 @@ def register_group_plugins(map):
             if group_controller == 'group':
                 from ckan.controllers.group import GroupController as controller_obj
             elif group_controller == 'organization':
+                log.error('**** organization group controller')
                 from ckan.controllers.organization import OrganizationController as controller_obj
             if controller_obj is not None:
+                log.error('*** add group type %r', group_type)
                 controller_obj.add_group_type(group_type)
 
     # Setup the fallback behaviour if one hasn't been defined.
@@ -253,6 +262,7 @@ def register_group_plugins(map):
         _default_group_plugin = DefaultGroupForm()
     if _default_organization_plugin is None:
         _default_organization_plugin = DefaultOrganizationForm()
+        log.error('*** set default org')
     if 'group' not in _group_controllers:
         _group_controllers['group'] = 'group'
     if 'organization' not in _group_controllers:
@@ -398,6 +408,8 @@ class DefaultGroupForm(object):
         Returns a string representing the location of the template to be
         rendered for the index page
         """
+        import logging; log = logging.getLogger(__name__); log.info('*** group index template')
+        import remote_pdb; remote_pdb.set_trace(host='0.0.0.0', port=3000)
         return 'group/index.html'
 
     def read_template(self):
@@ -552,6 +564,7 @@ class DefaultOrganizationForm(DefaultGroupForm):
         return 'organization/about.html'
 
     def index_template(self):
+        import logging; log = logging.getLogger(__name__); log.info('*** org index template')
         return 'organization/index.html'
 
     def admins_template(self):

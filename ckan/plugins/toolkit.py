@@ -257,6 +257,8 @@ For example: ``bar = toolkit.aslist(config.get('ckan.foo.bar', []))``
         t['DefaultGroupForm'] = lib_plugins.DefaultGroupForm
         t['DefaultOrganizationForm'] = lib_plugins.DefaultOrganizationForm
 
+        import logging as l; l.getLogger(__name__); l.error('**** toolkit')
+
         t['response'] = pylons.response
         self.docstring_overrides['response'] = '''The Pylons response object.
 
