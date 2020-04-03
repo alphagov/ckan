@@ -25,20 +25,20 @@ if six.PY2:
     # with the WSGI environ.
 
     # Start of webob.requests.BaseRequest monkey patch
-    original_charset__set = webob.request.BaseRequest._charset__set
+    original_charset__set = webob.request.BaseRequest._content_type__set
 
     def custom_charset__set(self, charset):
         original_charset__set(self, charset)
         if self.environ.get('CONTENT_TYPE', '').startswith(';'):
             self.environ['CONTENT_TYPE'] = ''
 
-    webob.request.BaseRequest._charset__set = custom_charset__set
+    webob.request.BaseRequest._content_type__set = custom_charset__set
 
     webob.request.BaseRequest.charset = property(
-        webob.request.BaseRequest._charset__get,
+        webob.request.BaseRequest._content_type__get,
         custom_charset__set,
-        webob.request.BaseRequest._charset__del,
-        webob.request.BaseRequest._charset__get.__doc__)
+        custom_charset__set,
+        webob.request.BaseRequest._content_type__get.__doc__)
 
     # End of webob.requests.BaseRequest monkey patch
 
