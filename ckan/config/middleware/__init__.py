@@ -21,24 +21,26 @@ if six.PY2:
     from routes import request_config as routes_request_config
     from ckan.config.middleware.pylons_app import make_pylons_stack
 
+    ## Comment out the monkey patch as we have upgraded webob and pylons
+
     # This monkey-patches the webob request object because of the way it messes
     # with the WSGI environ.
 
     # Start of webob.requests.BaseRequest monkey patch
-    original_charset__set = webob.request.BaseRequest._content_type__set
+    # original_charset__set = webob.request.BaseRequest._charset__set
 
-    def custom_charset__set(self, charset):
-        original_charset__set(self, charset)
-        if self.environ.get('CONTENT_TYPE', '').startswith(';'):
-            self.environ['CONTENT_TYPE'] = ''
+    # def custom_charset__set(self, charset):
+    #     original_charset__set(self, charset)
+    #     if self.environ.get('CONTENT_TYPE', '').startswith(';'):
+    #         self.environ['CONTENT_TYPE'] = ''
 
-    webob.request.BaseRequest._content_type__set = custom_charset__set
+    # webob.request.BaseRequest._content_type__set = custom_charset__set
 
-    webob.request.BaseRequest.charset = property(
-        webob.request.BaseRequest._content_type__get,
-        custom_charset__set,
-        custom_charset__set,
-        webob.request.BaseRequest._content_type__get.__doc__)
+    # webob.request.BaseRequest.charset = property(
+    #     webob.request.BaseRequest._charset__get,
+    #     custom_charset__set,
+    #     webob.request.BaseRequest._charset__del,
+    #     webob.request.BaseRequest._charset__get.__doc__)
 
     # End of webob.requests.BaseRequest monkey patch
 
@@ -159,7 +161,7 @@ class AskAppDispatcherMiddleware(object):
             request_config = routes_request_config()
             request_config.host = str(parts.netloc + parts.path)
             request_config.protocol = str(parts.scheme)
-            request_config.mapper = config['routes.map']
+            request_config.mapper = config['routes.map'] 
 
             return self.apps[app_name](environ, start_response)
         else:
