@@ -147,7 +147,10 @@ def load_config(config, load_site_user=True):
         # auth works as in a normal web request
         c = pylons.util.AttribSafeContextObj()
 
-        registry.register(pylons.c, c)
+        setattr(pylons, 'c', c)
+        print('**** c', pylons.c.user)
+        # debug comment out this registry section for now to get test data creation working
+        # registry.register(pylons.c, c)
 
         site_user = logic.get_action('get_site_user')({'ignore_auth': True}, {})
 
