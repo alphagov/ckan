@@ -36,8 +36,9 @@ def upgrade():
     op.drop_constraint(u'package_relationship_revision_id_fkey',
                        u'package_relationship', type_=u'foreignkey')
     op.drop_column(u'package_relationship', u'revision_id')
-    op.drop_constraint(u'package_tag_revision_id_fkey', u'package_tag',
-                       type_=u'foreignkey')
+    # DGU: this constraint does not exist on DGU stack
+    # op.drop_constraint(u'package_tag_revision_id_fkey', u'package_tag',
+    #                    type_=u'foreignkey')
     op.drop_column(u'package_tag', u'revision_id')
     op.drop_constraint(u'resource_revision_id_fkey', u'resource',
                        type_=u'foreignkey')

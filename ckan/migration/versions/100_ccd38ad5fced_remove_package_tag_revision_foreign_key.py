@@ -19,16 +19,17 @@ depends_on = None
 
 
 def upgrade():
-    op.drop_constraint(
-        u"package_tag_revision_continuity_id_fkey",
-        u"package_tag_revision",
-        type_=u"foreignkey",
-    )
-    op.drop_constraint(
-        u"package_tag_revision_package_id_fkey",
-        u"package_tag_revision",
-        type_=u"foreignkey",
-    )
+    # DGU: these constraints do not exist on DGU stack
+    # op.drop_constraint(
+    #     u"package_tag_revision_continuity_id_fkey",
+    #     u"package_tag_revision",
+    #     type_=u"foreignkey",
+    # )
+    # op.drop_constraint(
+    #     u"package_tag_revision_package_id_fkey",
+    #     u"package_tag_revision",
+    #     type_=u"foreignkey",
+    # )
     op.drop_constraint(
         u"package_extra_revision_package_id_fkey",
         u"package_extra_revision",
